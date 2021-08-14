@@ -1,8 +1,21 @@
+import axios from "axios";
 import React from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useHistory } from "react-router-dom";
+import { BACKEND_URL } from "../env-config";
+import { setUser, setAuth } from "../redux/actions/actions";
 const SignUpForm = () => {
   const [hide, setHide] = useState(true);
+  const [userData, setUserData] = useState({
+    username: "",
+    firstName: "",
+    lastName: "",
+    password: "",
+    email: "",
+  });
+  let dispatch = useDispatch();
+  let history = useHistory();
   return (
     <div className="flex flex-col max-w-md px-4 py-8 bg-white rounded-lg shadow dark:bg-gray-800 sm:px-6 md:px-8 lg:px-10">
       <div className="self-center mb-2 text-xl font-light text-gray-800 sm:text-2xl dark:text-white">
@@ -22,31 +35,43 @@ const SignUpForm = () => {
           <div className="flex flex-col mb-2">
             <div className=" relative ">
               <input
+                onChange={(e) => {
+                  setUserData({ ...userData, username: e.target.value });
+                }}
                 type="text"
                 id="create-account-username"
                 className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                 name="username"
                 placeholder="username"
+                required
               />
             </div>
           </div>
-          <div className="flex gap-4 mb-2">
+          <div className="flex flex-col md:flex-row gap-2 md:gap-4 mb-2">
             <div className=" relative ">
               <input
+                onChange={(e) => {
+                  setUserData({ ...userData, firstName: e.target.value });
+                }}
                 type="text"
                 id="create-account-first-name"
                 className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                 name="First name"
                 placeholder="First name"
+                required
               />
             </div>
             <div className=" relative ">
               <input
+                onChange={(e) => {
+                  setUserData({ ...userData, lastName: e.target.value });
+                }}
                 type="text"
                 id="create-account-last-name"
                 className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                 name="Last name"
                 placeholder="Last name"
+                required
               />
             </div>
           </div>
@@ -69,29 +94,52 @@ const SignUpForm = () => {
                 </svg>
               </span>
               <input
+                onChange={(e) => {
+                  setUserData({ ...userData, password: e.target.value });
+                }}
                 type={hide ? "password" : "text"}
                 id="sign-in-email2"
                 className=" rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                 placeholder="Your password"
+                required
               />
             </div>
           </div>
           <div className="flex flex-col mb-2">
             <div className=" relative ">
               <input
+                onChange={(e) => {
+                  setUserData({ ...userData, email: e.target.value });
+                }}
                 type="email"
                 id="create-account-email"
                 className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                 placeholder="Email"
+                required
               />
             </div>
           </div>
           <div className="flex w-full my-4">
             <button
-              type="submit"
+              onClick={(e) => {
+                e.target.disabled = true;
+                axios
+                  .post(`${BACKEND_URL}/api/v1/auth/signup`, userData)
+                  .then((res) => {
+                    if (res.data.res) {
+                      document.cookie = "jwt=" + res.data.jwt;
+                      dispatch(setUser(res.data.userData));
+                      dispatch(setAuth(true));
+                    } else {
+                      history.push("/");
+                      window.alert(res.data.msg);
+                    }
+                  })
+                  .catch((err) => console.log(err));
+              }}
               className="py-2 px-4  bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 focus:ring-offset-purple-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
             >
-              Login
+              Signup
             </button>
           </div>
         </form>

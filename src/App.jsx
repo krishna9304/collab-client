@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Homepage from "./pages/HomePage";
@@ -7,9 +7,6 @@ import SignUpPage from "./pages/SignUp";
 
 function App() {
   let globalState = useSelector((state) => state);
-  useEffect(() => {
-    console.log(globalState.auth);
-  });
   return (
     <div className="select-none">
       <BrowserRouter>

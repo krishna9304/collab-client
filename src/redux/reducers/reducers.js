@@ -1,6 +1,6 @@
 import { ActionTypes } from "../constants/actionconstants";
 let default_state = {
-  auth: true,
+  auth: false,
   user: null,
   socket: null,
 };
