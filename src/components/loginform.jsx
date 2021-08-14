@@ -1,8 +1,18 @@
+import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useHistory } from "react-router-dom";
+import { BACKEND_URL } from "../env-config";
+import { setAuth, setUser } from "../redux/actions/actions";
 
 const LoginForm = () => {
   const [hide, setHide] = useState(true);
+  const [credentials, setCredentials] = useState({
+    username: "",
+    password: "",
+  });
+  let dispatch = useDispatch();
+  const history = useHistory();
   return (
     <div className="flex flex-col w-full max-w-md px-4 py-8 bg-white rounded-lg shadow dark:bg-gray-800 sm:px-6 md:px-8 lg:px-10">
       <div className="self-center mb-6 text-xl font-light text-gray-600 sm:text-2xl dark:text-white">
@@ -24,10 +34,13 @@ const LoginForm = () => {
                 </svg>
               </span>
               <input
+                onChange={(e) => {
+                  setCredentials({ ...credentials, username: e.target.value });
+                }}
                 type="text"
                 id="sign-in-email1"
                 className=" rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                placeholder="Your email"
+                placeholder="username"
               />
             </div>
           </div>
@@ -50,6 +63,9 @@ const LoginForm = () => {
                 </svg>
               </span>
               <input
+                onChange={(e) => {
+                  setCredentials({ ...credentials, password: e.target.value });
+                }}
                 type={hide ? "password" : "text"}
                 id="sign-in-email2"
                 className=" rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
@@ -58,12 +74,26 @@ const LoginForm = () => {
             </div>
           </div>
           <div className="flex w-full">
-            <button
-              type="submit"
+            <div
+              onClick={() => {
+                axios
+                  .post(`${BACKEND_URL}/api/v1/auth/signin`, credentials)
+                  .then((res) => {
+                    if (res.data.res) {
+                      document.cookie = "jwt=" + res.data.token;
+                      dispatch(setUser(res.data.userData));
+                      dispatch(setAuth(true));
+                      history.push("/");
+                    } else {
+                      window.alert(res.data.msg);
+                    }
+                  })
+                  .catch(console.log);
+              }}
               className="py-2 px-4  bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 focus:ring-offset-purple-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
             >
               Login
-            </button>
+            </div>
           </div>
         </form>
       </div>
