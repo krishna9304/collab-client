@@ -6,7 +6,8 @@ import { BACKEND_URL } from "./env-config";
 import Homepage from "./pages/HomePage";
 import LoginPage from "./pages/LogIn";
 import SignUpPage from "./pages/SignUp";
-import { setAuth, setUser } from "./redux/actions/actions";
+import { setAuth, setSocket, setUser } from "./redux/actions/actions";
+import socket from "./socket";
 
 export function extractCookies(cookieStr) {
   return cookieStr
@@ -36,6 +37,7 @@ function App() {
             try {
               if (res.data.res) {
                 document.cookie = "jwt=" + res.data.newToken;
+                dispatch(setSocket(socket()));
                 dispatch(setAuth(true));
                 dispatch(setUser(res.data.userData));
                 console.log("token verified");
