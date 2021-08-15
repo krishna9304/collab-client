@@ -1,8 +1,43 @@
 import React from "react";
+import { useState } from "react";
+import Draggable from "../../utilities/draggable";
 
 const Circle = () => {
+  const [size, setSize] = useState(32 * 4);
+  const [pos, setPos] = useState(0, 0);
   return (
-    <div className="w-32 h-32 rounded-full bg-white cursor-move border-4 border-blue-900"></div>
+    <>
+      <svg
+        className="absolute z-0"
+        style={{
+          top: pos.y - 4,
+          left: pos.x - 4,
+          width: size + 10,
+          height: size + 10,
+        }}
+      >
+        <circle stroke="black" cx={size / 2 + 4} cy={4} r={4} />
+        <circle stroke="black" cx={size / 2 + 4} cy={size + 4} r={4} />
+        <circle stroke="black" cx={4} cy={size / 2 + 4} r={4} />
+        <circle stroke="black" cx={size + 4} cy={size / 2 + 4} r={4} />
+      </svg>
+      <Draggable
+        className="z-10"
+        onPosChange={(p) => {
+          setPos(p);
+        }}
+      >
+        <div
+          contentEditable
+          onChange={console.log}
+          style={{
+            width: size + "px",
+            height: size + "px",
+          }}
+          className={`rounded-full bg-white cursor-move border-2 border-blue-900`}
+        />
+      </Draggable>
+    </>
   );
 };
 
