@@ -12,3 +12,7 @@ export const setSocket = (socket) => ({
   type: ActionTypes.SET_SOCKET,
   payload: socket,
 });
+export const addShapes = (shape) => ({
+  type: ActionTypes.ADD_SHAPES,
+  payload: shape,
+});
