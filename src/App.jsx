@@ -8,6 +8,7 @@ import LoginPage from "./pages/LogIn";
 import SignUpPage from "./pages/SignUp";
 import { setAuth, setSocket, setUser } from "./redux/actions/actions";
 import socket from "./socket";
+import Room from "./pages/room";
 
 export function extractCookies(cookieStr) {
   return cookieStr
@@ -21,7 +22,6 @@ export function extractCookies(cookieStr) {
 }
 
 function App() {
-  let globalState = useSelector((state) => state);
   let [authDone, setAuthDone] = useState(false);
   let dispatch = useDispatch();
   let authUser = () => {
@@ -85,7 +85,10 @@ function App() {
             <SignUpPage />
           </Route>
           <Route exact path="/">
-            {globalState.auth ? <Homepage /> : <LoginPage />}
+            <Homepage />
+          </Route>
+          <Route exact path="/room/:id">
+            <Room />
           </Route>
         </Switch>
       </BrowserRouter>

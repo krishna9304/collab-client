@@ -1,13 +1,29 @@
 import React from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 const Homepage = () => {
   const userData = useSelector((state) => state.user);
   const socket = useSelector((state) => state.socket);
+  const auth = useSelector((state) => state.auth);
   const [roomId, setRoomId] = useState("");
   const [hide, setHide] = useState(true);
-  return (
+  const history = useHistory();
+  useEffect(() => {
+    if (!auth) {
+      history.push("/signin");
+    }
+    socket.on("gotoroom", (RoomId) => {
+      history.push("/room/" + RoomId);
+    });
+  }, []);
+  return !auth ? (
+    <div className="w-screen h-screen flex justify-center items-center text-center text-4xl text-purple-600">
+      Redirecting...
+    </div>
+  ) : (
     <div className="w-screen p-6 h-screen">
       <div className="font-extrabold text-3xl text-purple-600">Collab.</div>
       <div className="w-full h-full flex items-center flex-col justify-center">

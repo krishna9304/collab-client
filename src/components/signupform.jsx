@@ -1,7 +1,8 @@
 import axios from "axios";
 import React from "react";
+import { useEffect } from "react";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import { BACKEND_URL } from "../env-config";
 import { setUser, setAuth, setSocket } from "../redux/actions/actions";
@@ -16,8 +17,17 @@ const SignUpForm = () => {
     email: "",
   });
   let dispatch = useDispatch();
+  const auth = useSelector((s) => s.auth);
   let history = useHistory();
-  return (
+  useEffect(() => {
+    if (auth) history.push("/");
+  });
+
+  return auth ? (
+    <div className="w-screen h-screen flex justify-center items-center text-center text-4xl text-purple-600">
+      Redirecting...
+    </div>
+  ) : (
     <div className="flex flex-col max-w-md px-4 py-8 bg-white rounded-lg shadow dark:bg-gray-800 sm:px-6 md:px-8 lg:px-10">
       <div className="self-center mb-2 text-xl font-light text-gray-800 sm:text-2xl dark:text-white">
         Create a new account
