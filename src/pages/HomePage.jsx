@@ -14,11 +14,12 @@ const Homepage = () => {
   useEffect(() => {
     if (!auth) {
       history.push("/signin");
+    } else {
+      socket.on("gotoroom", (RoomId) => {
+        history.push("/room/" + RoomId);
+      });
     }
-    socket.on("gotoroom", (RoomId) => {
-      history.push("/room/" + RoomId);
-    });
-  }, []);
+  }, [auth, history, socket]);
   return !auth ? (
     <div className="w-screen h-screen flex justify-center items-center text-center text-4xl text-purple-600">
       Redirecting...

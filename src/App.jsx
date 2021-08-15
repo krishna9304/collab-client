@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { BACKEND_URL } from "./env-config";
 import Homepage from "./pages/HomePage";
@@ -68,9 +68,10 @@ function App() {
   };
   useEffect(() => {
     authUser();
+    // eslint-disable-next-line
   }, []);
 
-  if (authDone === false) {
+  if (!authDone) {
     return <h1>Loading...</h1>;
   }
 
