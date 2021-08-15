@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import { BACKEND_URL } from "../env-config";
-import { setAuth, setUser } from "../redux/actions/actions";
+import { setAuth, setSocket, setUser } from "../redux/actions/actions";
+import socket from "../socket";
 
 const LoginForm = () => {
   const [hide, setHide] = useState(true);
@@ -82,6 +83,7 @@ const LoginForm = () => {
                     if (res.data.res) {
                       document.cookie = "jwt=" + res.data.token;
                       dispatch(setUser(res.data.userData));
+                      dispatch(setSocket(socket()));
                       dispatch(setAuth(true));
                       history.push("/");
                     } else {

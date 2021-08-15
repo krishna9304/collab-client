@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import { BACKEND_URL } from "../env-config";
-import { setUser, setAuth } from "../redux/actions/actions";
+import { setUser, setAuth, setSocket } from "../redux/actions/actions";
+import socket from "../socket";
 const SignUpForm = () => {
   const [hide, setHide] = useState(true);
   const [userData, setUserData] = useState({
@@ -129,6 +130,7 @@ const SignUpForm = () => {
                     if (res.data.res) {
                       document.cookie = "jwt=" + res.data.token;
                       dispatch(setUser(res.data.userData));
+                      dispatch(setSocket(socket()));
                       dispatch(setAuth(true));
                       history.push("/");
                     } else {

@@ -18,20 +18,20 @@ const Homepage = () => {
         <div className="flex gap-4">
           <span
             onClick={() => {
-              let Id = uuidv4() + Date.now();
+              let Id = uuidv4().slice(0, 8);
               socket.emit("createRoom", Id);
             }}
-            className="border-2 cursor-pointer hover:scale-x-105 hover:scale-y-110 select-none transform duration-300 py-2 px-12 text-purple-600 text-xl rounded-lg border-purple-600 font-light"
+            className="border-2 text-center cursor-pointer hover:scale-x-105 hover:scale-y-110 select-none transform duration-300 py-2 px-12 text-purple-600 text-xl rounded-lg border-purple-600 font-light"
           >
-            Create a room
+            Create Room
           </span>
           <span
             onClick={() => {
               setHide(!hide);
             }}
-            className="border-2 cursor-pointer bg-purple-600 text-white border-white hover:scale-x-105 hover:scale-y-110 select-none transform duration-300 py-2 px-12 text-xl rounded-lg font-light"
+            className="border-2 text-center cursor-pointer bg-purple-600 text-white border-white hover:scale-x-105 hover:scale-y-110 select-none transform duration-300 py-2 px-12 text-xl rounded-lg font-light"
           >
-            Join a room
+            Join Room
           </span>
         </div>
         <div
@@ -43,11 +43,11 @@ const Homepage = () => {
             onChange={(e) => {
               setRoomId(e.target.value);
             }}
-            className={`w-1/4 border rounded-lg outline-none border-gray-300 mx-2 p-4 py-2 text-sm font-light`}
+            className={`w-3/5 max-w-sm border rounded-lg outline-none border-gray-300 mx-2 p-4 py-2 text-sm font-light`}
             placeholder="Room ID"
             type="text"
             value={roomId}
-          ></input>
+          />
           <div
             onClick={() => {
               socket.emit("joinRoom", roomId);
