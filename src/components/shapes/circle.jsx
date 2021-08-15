@@ -3,8 +3,11 @@ import { useState } from "react";
 import Draggable from "../../utilities/draggable";
 
 const Circle = () => {
-  const [size, setSize] = useState(32 * 4);
-  const [pos, setPos] = useState(0, 0);
+  const [size, setSize] = useState(48 * 4);
+  const [pos, setPos] = useState({
+    x: 0,
+    y: 0,
+  });
   return (
     <>
       <svg
