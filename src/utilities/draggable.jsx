@@ -43,10 +43,14 @@ const Draggable = (props) => {
       document.onmousemove = null;
       document.onmouseup = null;
     }
+    if (typeof props.onPosChange == "function") {
+      props.onPosChange(pos);
+    }
     // eslint-disable-next-line
-  }, [pos, rel, dragging]);
+  }, [pos, dragging]);
   return (
     <div
+      className={props.className || ""}
       onMouseDown={onMouseDown}
       style={{
         position: "absolute",
