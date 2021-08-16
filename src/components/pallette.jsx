@@ -10,7 +10,32 @@ import { addShapes } from "../redux/actions/actions";
 const Pallete = () => {
   const [hidden, setHidden] = useState(true);
   let dispatch = useDispatch();
+  const [count, setCount] = useState({
+    countCircle: 0,
+    countRectangle: 0,
+    countParalellogram: 0,
+    countDiamond: 0,
+  });
   const globalState = useSelector((state) => state);
+  const node = (id, type, shape) => {
+    return {
+      id: id,
+      width: 140,
+      height: 50,
+      offsetX: 400,
+      offsetY: 400,
+      annotations: [
+        {
+          id: "",
+          content: "content",
+        },
+      ],
+      shape: {
+        type: type,
+        shape: shape,
+      },
+    };
+  };
   useEffect(() => {
     let prev;
     if (typeof window.onmousemove == "function") {
@@ -31,9 +56,14 @@ const Pallete = () => {
     >
       <div
         onClick={() => {
-          let shape = { x: 0, y: 0, type: "circle" };
+          setCount({ ...count, countCircle: count.countCircle + 1 });
+          dispatch(
+            addShapes([
+              ...globalState.shapes,
+              node(`circle-${count.countCircle}`, "Basic", "Ellipse"),
+            ])
+          );
           console.log(globalState.shapes);
-          dispatch(addShapes([...globalState.shapes, shape]));
         }}
         className="m-2 p-1 rounded-full justify-center items-center flex hover:bg-gray-300 cursor-pointer h-8"
         id="circle"
@@ -42,8 +72,13 @@ const Pallete = () => {
       </div>
       <div
         onClick={() => {
-          let shape = { x: 0, y: 0, type: "rectangle" };
-          dispatch(addShapes([...globalState.shapes, shape]));
+          setCount({ ...count, countRectangle: count.countRectangle + 1 });
+          dispatch(
+            addShapes([
+              ...globalState.shapes,
+              node(`rectangle-${count.countRectangle}`, "Flow", "Process"),
+            ])
+          );
         }}
         className="m-2 p-1 rounded-full justify-center items-center flex hover:bg-gray-300 cursor-pointer h-8"
         id="rectangle"
@@ -52,18 +87,35 @@ const Pallete = () => {
       </div>
       <div
         onClick={() => {
-          let shape = { x: 0, y: 0, type: "paralellogram" };
-          dispatch(addShapes([...globalState.shapes, shape]));
+          setCount({
+            ...count,
+            countParalellogram: count.countParalellogram + 1,
+          });
+          dispatch(
+            addShapes([
+              ...globalState.shapes,
+              node(
+                `parallelogram-${count.countParalellogram}`,
+                "Basic",
+                "Parallelogram"
+              ),
+            ])
+          );
         }}
         className="m-2 p-1 px-0 rounded-full justify-center items-center flex hover:bg-gray-300 cursor-pointer h-8"
-        id="paralellogram"
+        id="parallelogram"
       >
         <img className="w-full h-full" src={paralellogram} alt="" srcSet="" />
       </div>
       <div
         onClick={() => {
-          let shape = { x: 0, y: 0, type: "diamond" };
-          dispatch(addShapes([...globalState.shapes, shape]));
+          setCount({ ...count, countDiamond: count.countDiamond + 1 });
+          dispatch(
+            addShapes([
+              ...globalState.shapes,
+              node(`diamond-${count.countDiamond}`, "Flow", "Decision"),
+            ])
+          );
         }}
         className="m-2 p-0.5 rounded-full justify-center items-center flex hover:bg-gray-300 cursor-pointer h-8"
         id="diamond"
