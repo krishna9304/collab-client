@@ -3,4 +3,5 @@ export const ActionTypes = {
   AUTHENTICATED_USER: "app/redux/actions/AUTHENTICATE_USER",
   SET_SOCKET: "app/redux/actions/SET_SOCKET",
   ADD_SHAPES: "app/redux/actions/ADD_SHAPES",
+  ADD_CONNECTORS: "app/redux/actions/ADD_CONNECTORS",
 };

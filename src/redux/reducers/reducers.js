@@ -4,6 +4,7 @@ let default_state = {
   user: null,
   socket: null,
   shapes: [],
+  connectors: [],
 };
 
 let reducerFunction = (state = default_state, action) => {
@@ -16,6 +17,8 @@ let reducerFunction = (state = default_state, action) => {
       return { ...state, user: action.payload };
     case ActionTypes.ADD_SHAPES:
       return { ...state, shapes: action.payload };
+    case ActionTypes.ADD_CONNECTORS:
+      return { ...state, connectors: action.payload };
     default:
       return state;
   }

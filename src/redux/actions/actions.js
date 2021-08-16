@@ -16,3 +16,7 @@ export const addShapes = (shape) => ({
   type: ActionTypes.ADD_SHAPES,
   payload: shape,
 });
+export const addConnectors = (connector) => ({
+  type: ActionTypes.ADD_CONNECTORS,
+  payload: connector,
+});

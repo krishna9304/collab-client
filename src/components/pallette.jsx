@@ -5,37 +5,71 @@ import rectangle from "./icons/rectangular-shape-outline.png";
 import diamond from "./icons/diamond.png";
 import paralellogram from "./icons/parallelogram.png";
 import { useDispatch, useSelector } from "react-redux";
-import { addShapes } from "../redux/actions/actions";
+import { addConnectors, addShapes } from "../redux/actions/actions";
+import connect from "./icons/jack-connector.png";
+
+class node {
+  constructor(id, type, shape) {
+    this.id = id;
+    this.width = 140;
+    this.height = 50;
+    this.offsetX = 400;
+    this.offsetY = 400;
+    this.annotations = [
+      {
+        id: "",
+        content: "id: " + id,
+      },
+    ];
+    this.shape = {
+      type: type,
+      shape: shape,
+    };
+  }
+}
 
 const Pallete = () => {
   const [hidden, setHidden] = useState(true);
+  const connector = (id, sourceID, targetID) => {
+    return {
+      // Name of the connector
+      id: id,
+      style: {
+        strokeColor: "#6BA5D7",
+        fill: "#6BA5D7",
+        strokeWidth: 2,
+      },
+      targetDecorator: {
+        style: {
+          fill: "#6BA5D7",
+          strokeColor: "#6BA5D7",
+        },
+      },
+      // ID of the source and target nodes
+      sourceID: sourceID,
+      targetID: targetID,
+      type: "Orthogonal",
+    };
+  };
+
   let dispatch = useDispatch();
   const [count, setCount] = useState({
     countCircle: 0,
     countRectangle: 0,
     countParalellogram: 0,
     countDiamond: 0,
+    countConnector: 0,
   });
   const globalState = useSelector((state) => state);
-  const node = (id, type, shape) => {
-    return {
-      id: id,
-      width: 140,
-      height: 50,
-      offsetX: 400,
-      offsetY: 400,
-      annotations: [
-        {
-          id: "",
-          content: "content",
-        },
-      ],
-      shape: {
-        type: type,
-        shape: shape,
-      },
-    };
-  };
+  useEffect(() => {
+    setCount({ ...count, countConnector: count.countConnector + 1 });
+    dispatch(
+      addConnectors([
+        ...globalState.connectors,
+        connector(`connector-${count.countConnector}`, "", ""),
+      ])
+    );
+  }, [globalState.shapes]);
   useEffect(() => {
     let prev;
     if (typeof window.onmousemove == "function") {
@@ -60,10 +94,9 @@ const Pallete = () => {
           dispatch(
             addShapes([
               ...globalState.shapes,
-              node(`circle-${count.countCircle}`, "Basic", "Ellipse"),
+              new node(`c-${count.countCircle}`, "Basic", "Ellipse"),
             ])
           );
-          console.log(globalState.shapes);
         }}
         className="m-2 p-1 rounded-full justify-center items-center flex hover:bg-gray-300 cursor-pointer h-8"
         id="circle"
@@ -76,7 +109,7 @@ const Pallete = () => {
           dispatch(
             addShapes([
               ...globalState.shapes,
-              node(`rectangle-${count.countRectangle}`, "Flow", "Process"),
+              new node(`r-${count.countRectangle}`, "Flow", "Process"),
             ])
           );
         }}
@@ -94,8 +127,8 @@ const Pallete = () => {
           dispatch(
             addShapes([
               ...globalState.shapes,
-              node(
-                `parallelogram-${count.countParalellogram}`,
+              new node(
+                `p-${count.countParalellogram}`,
                 "Basic",
                 "Parallelogram"
               ),
@@ -113,7 +146,7 @@ const Pallete = () => {
           dispatch(
             addShapes([
               ...globalState.shapes,
-              node(`diamond-${count.countDiamond}`, "Flow", "Decision"),
+              new node(`d-${count.countDiamond}`, "Flow", "Decision"),
             ])
           );
         }}
@@ -121,6 +154,27 @@ const Pallete = () => {
         id="diamond"
       >
         <img className="w-full h-full" src={diamond} alt="" srcSet="" />
+      </div>
+      <div
+        onClick={() => {
+          let sourceID = window.prompt("Connect From: ");
+          let targetID = window.prompt("Connect To: ");
+          setCount({ ...count, countConnector: count.countConnector + 1 });
+          dispatch(
+            addConnectors([
+              ...globalState.connectors,
+              connector(
+                `connector-${count.countConnector}`,
+                sourceID,
+                targetID
+              ),
+            ])
+          );
+        }}
+        className="m-2 p-0.5 rounded-full justify-center items-center flex hover:bg-gray-300 cursor-pointer h-8"
+        id="connector"
+      >
+        <img className="w-full h-full" src={connect} alt="" srcSet="" />
       </div>
     </div>
   );
