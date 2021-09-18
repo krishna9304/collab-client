@@ -8,7 +8,6 @@ import { addConnectors, addShapes } from "../redux/actions/actions";
 const Room = () => {
   const auth = useSelector((s) => s.auth);
   const params = useParams();
-  // eslint-disable-next-line
   const id = params.id;
   const history = useHistory();
   let globalState = useSelector((state) => state);
@@ -17,8 +16,10 @@ const Room = () => {
     if (!auth) {
       history.push("/signin");
     }
-  }, [auth, history]);
-
+  }, []);
+  useEffect(() => {
+    globalState.socket.emit("joinRoom", id);
+  }, []);
   return !auth ? (
     <div className="w-screen h-screen flex justify-center items-center text-center text-4xl text-purple-600">
       Redirecting...
@@ -37,6 +38,7 @@ const Room = () => {
               }
             }
             dispatch(addShapes(shapes));
+            globalState.socket.emit("shapes", shapes);
           }}
           id="diagram"
           width={"100%"}

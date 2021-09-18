@@ -61,6 +61,7 @@ const Pallete = () => {
     countConnector: 0,
   });
   const globalState = useSelector((state) => state);
+  let socket = globalState.socket;
   useEffect(() => {
     setCount({ ...count, countConnector: count.countConnector + 1 });
     dispatch(
@@ -69,8 +70,12 @@ const Pallete = () => {
         connector(`connector-${count.countConnector}`, "", ""),
       ])
     );
+    // eslint-dibsable-next-line
   }, [globalState.shapes]);
   useEffect(() => {
+    socket.on("shapes", (data) => {
+      dispatch(addShapes(data));
+    });
     let prev;
     if (typeof window.onmousemove == "function") {
       prev = window.onmousemove;
@@ -91,12 +96,12 @@ const Pallete = () => {
       <div
         onClick={() => {
           setCount({ ...count, countCircle: count.countCircle + 1 });
-          dispatch(
-            addShapes([
-              ...globalState.shapes,
-              new node(`c-${count.countCircle}`, "Basic", "Ellipse"),
-            ])
-          );
+          let temp = [
+            ...globalState.shapes,
+            new node(`c-${count.countCircle}`, "Basic", "Ellipse"),
+          ];
+          dispatch(addShapes(temp));
+          socket.emit("shapes", temp);
         }}
         className="m-2 p-1 rounded-full justify-center items-center flex hover:bg-gray-300 cursor-pointer h-8"
         id="circle"
@@ -106,12 +111,12 @@ const Pallete = () => {
       <div
         onClick={() => {
           setCount({ ...count, countRectangle: count.countRectangle + 1 });
-          dispatch(
-            addShapes([
-              ...globalState.shapes,
-              new node(`r-${count.countRectangle}`, "Flow", "Process"),
-            ])
-          );
+          let temp = [
+            ...globalState.shapes,
+            new node(`r-${count.countRectangle}`, "Flow", "Process"),
+          ];
+          dispatch(addShapes(temp));
+          socket.emit("shapes", temp);
         }}
         className="m-2 p-1 rounded-full justify-center items-center flex hover:bg-gray-300 cursor-pointer h-8"
         id="rectangle"
@@ -124,16 +129,12 @@ const Pallete = () => {
             ...count,
             countParalellogram: count.countParalellogram + 1,
           });
-          dispatch(
-            addShapes([
-              ...globalState.shapes,
-              new node(
-                `p-${count.countParalellogram}`,
-                "Basic",
-                "Parallelogram"
-              ),
-            ])
-          );
+          let temp = [
+            ...globalState.shapes,
+            new node(`p-${count.countParalellogram}`, "Basic", "Parallelogram"),
+          ];
+          dispatch(addShapes(temp));
+          socket.emit("shapes", temp);
         }}
         className="m-2 p-1 px-0 rounded-full justify-center items-center flex hover:bg-gray-300 cursor-pointer h-8"
         id="parallelogram"
@@ -143,12 +144,12 @@ const Pallete = () => {
       <div
         onClick={() => {
           setCount({ ...count, countDiamond: count.countDiamond + 1 });
-          dispatch(
-            addShapes([
-              ...globalState.shapes,
-              new node(`d-${count.countDiamond}`, "Flow", "Decision"),
-            ])
-          );
+          let temp = [
+            ...globalState.shapes,
+            new node(`d-${count.countDiamond}`, "Flow", "Decision"),
+          ];
+          dispatch(addShapes(temp));
+          socket.emit("shapes", temp);
         }}
         className="m-2 p-0.5 rounded-full justify-center items-center flex hover:bg-gray-300 cursor-pointer h-8"
         id="diamond"
